@@ -1,0 +1,26 @@
+<div class="notification-container">
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="alert alert-@Severity" role="alert">
+            @Message
+            <button type="button" class="btn-close" @onclick="Dismiss"></button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public string Severity { get; set; } = "info";
+
+    [Parameter]
+    public EventCallback OnDismiss { get; set; }
+
+    private void Dismiss()
+    {
+        Message = string.Empty;
+        OnDismiss.InvokeAsync();
+    }
+}

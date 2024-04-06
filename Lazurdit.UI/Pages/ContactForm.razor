@@ -1,0 +1,87 @@
+@page "/contactform"
+@using Lazurdit.UI.Models
+@using System.Text.Json
+@using System.Text
+@using Lazurdit.UI.Services
+@inject IToastService ToastService
+
+@using Blazored.Toast.Configuration;
+@using Blazored.Toast.Services;
+
+
+<h3>Add Contact</h3>
+
+<EditForm Model="@_contact" OnValidSubmit="@AddContact">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <InputText id="firstName" class="form-control" @bind-Value="_contact.FirstName"/>
+        <ValidationMessage For="@(() => _contact.FirstName)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <InputText id="lastName" class="form-control" @bind-Value="_contact.LastName"/>
+        <ValidationMessage For="@(() => _contact.LastName)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="_contact.Email"/>
+        <ValidationMessage For="@(() => _contact.Email)"/>
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="_contact.PhoneNumber"/>
+        <ValidationMessage For="@(() => _contact.PhoneNumber)"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+<NotificationComponent Message="@NotificationMessage" Severity="@NotificationSeverity" OnDismiss="DismissNotification"/>
+
+
+@code {
+    private  Contact _contact = new Contact();
+    [Inject] private ContactService ContactService { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private string NotificationMessage { get; set; }
+    private string NotificationSeverity { get; set; }
+
+    private void ShowNotification(string message, string severity)
+    {
+        NotificationMessage = message;
+        NotificationSeverity = severity;
+    }
+
+    private void DismissNotification()
+    {
+        NotificationMessage = null;
+    }
+
+    private async Task AddContact()
+    {
+        var response = await ContactService.AddContactAsync(_contact);
+        Action<ToastSettings> toastSetting = settings =>
+        {
+            settings.IconType = IconType.FontAwesome;
+            settings.Position = ToastPosition.TopRight;
+            settings.ShowProgressBar = true;
+            settings.PauseProgressOnHover = true;
+            settings.ShowCloseButton = true;
+        };
+        if (response)
+        {
+            _contact = new Contact();
+            ToastService.ShowSuccess("Contact Created", toastSetting);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ToastService.ShowError("There is an error",toastSetting);
+        }
+    }
+
+}
