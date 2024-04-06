@@ -12,7 +12,7 @@ How to run it, simply clone the solution and first run the Lazurdit.API Project 
 Clone the project
 
 ```bash
-  git clone https://github.com/aabdelhaleemm/LazurdTask.git
+git clone https://github.com/aabdelhaleemm/LazurdTask.git
 ```
 
 Open the solution and let Nuget packages download, then simply run the `Lazurdit.API` project first and then run `Lazurdit.UI` and it should work!
