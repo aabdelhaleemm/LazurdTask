@@ -4,7 +4,7 @@
 Hi this is the task solution!, 
 
 
-How to run it, simply clone the solution and first run the Lazurdit.API Project and then run Lazurdit.UI Project
+
 
 
 ## Installation
